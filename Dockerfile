@@ -41,6 +41,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000 HOSTNAME=0.0.0.0
-VOLUME ["/app/data"]
+# NB : pas d'instruction VOLUME ici (refusée par Railway). Monter un volume
+# persistant sur /app/data via l'hébergeur (Railway Volumes, compose, -v…).
 
 CMD ["node", "server.js"]
