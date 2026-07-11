@@ -31,7 +31,41 @@ d'images**, **aucun compte cloud** à configurer. Tout tient dans un fichier.
 > Render et Fly.io fonctionnent pareil : build via `Dockerfile`, un **disque/volume**
 > monté sur `/app/data`, et les mêmes variables d'environnement.
 
-## 3. Avec Docker (n'importe quel VPS)
+## 2 bis. Cas OVH « hosting-free-100m » (hébergement mutualisé)
+
+⚠️ **Important** : l'offre OVH **mutualisée** (hosting-free-100m, accès **FTP**
+uniquement, 100 Mo, **pas de SSH**) sert **PHP + fichiers statiques**. Elle **ne
+peut pas exécuter Next.js / Node.js** ni faire tourner un serveur permanent.
+
+**Bonne nouvelle : tu gardes ton domaine.** Le schéma qui marche :
+
+1. Héberger l'app sur une plateforme **Node** (Railway/Render — §2) ou un **VPS**
+   (§3–4).
+2. **Brancher ton domaine OVH** (ex. `sanzzadev.com`) dessus **via le DNS** :
+   - Dans l'**Espace Client OVH → Domaines → sanzzadev.com → Zone DNS**.
+   - Ajoute un enregistrement **CNAME** : `roulette` → la cible fournie par
+     l'hébergeur (ex. `xxxx.up.railway.app`).
+   - L'app sera accessible sur **`https://roulette.sanzzadev.com`** (le HTTPS est
+     géré par l'hébergeur Node).
+   - L'apex (`sanzzadev.com` sans sous-domaine) n'accepte pas de CNAME : utilise
+     un sous-domaine, ou l'enregistrement A/ALIAS indiqué par l'hébergeur.
+
+> Pour un serveur **chez OVH** avec SSH + Docker, prends un **VPS OVHcloud**
+> (à partir de ~3,5 €/mois) plutôt que l'hébergement mutualisé, puis suis §3/§4.
+
+## 3. Avec Docker (n'importe quel VPS) — le plus rapide : docker compose
+
+```bash
+# Sur ton serveur, à la racine du repo :
+echo "JWT_SECRET=$(openssl rand -base64 48)" > .env
+echo "NEXT_PUBLIC_APP_URL=https://roulette.sanzzadev.com" >> .env
+docker compose up -d --build
+```
+
+C'est tout : l'app tourne sur le port 3000, les données sont dans le volume
+`nextroulette_data`. Mets un reverse-proxy HTTPS devant (voir plus bas).
+
+### Variante `docker run` (sans compose)
 
 ```bash
 # Build

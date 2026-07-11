@@ -1,0 +1,27 @@
+# Déploiement en une commande sur ton propre serveur (VPS avec Docker).
+#   1. Crée un fichier .env à côté avec au moins :  JWT_SECRET=...  NEXT_PUBLIC_APP_URL=https://ton-domaine
+#   2. Lance :  docker compose up -d --build
+# Les données (base SQLite + photos) sont conservées dans le volume "nextroulette_data".
+services:
+  app:
+    build: .
+    image: nextroulette:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Obligatoire — génère-le avec : openssl rand -base64 48
+      JWT_SECRET: ${JWT_SECRET:?Definis JWT_SECRET dans le fichier .env}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-8}
+      DATABASE_PATH: /app/data/nextroulette.db
+    volumes:
+      - nextroulette_data:/app/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  nextroulette_data:
