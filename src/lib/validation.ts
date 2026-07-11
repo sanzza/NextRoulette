@@ -25,7 +25,7 @@ export type ExEntryInput = z.infer<typeof exEntrySchema>;
 
 /** Création d'une partie (room) partageable par lien. */
 export const createRoomSchema = z.object({
-  nom: z.string().trim().min(1).max(60).default("Soirée NextRoulette"),
+  nom: z.string().trim().min(1).max(60).default("Soirée The nEXt Roulette"),
 });
 export type CreateRoomInput = z.infer<typeof createRoomSchema>;
 

@@ -10,10 +10,10 @@ const fredoka = Fredoka({
 });
 
 export const metadata: Metadata = {
-  title: "NextRoulette — L'ex de qui ?",
+  title: "The nEXt Roulette — L'ex de qui ?",
   description:
     "Le jeu festif entre potes : chacun ajoute la photo d'un ex, la roulette désigne… et il faut deviner l'ex de qui !",
-  applicationName: "NextRoulette",
+  applicationName: "The nEXt Roulette",
   robots: { index: true, follow: true },
 };
 

@@ -1,4 +1,6 @@
-# 🎰 NextRoulette
+# 🎰 The nEXt Roulette
+
+> *(nom de code technique : `nextroulette`)*
 
 > Le jeu festif entre potes : chacun ajoute la photo d'un ex via un lien partagé,
 > la roulette en désigne un… et tout le monde doit deviner **« c'est l'ex de qui ? »**

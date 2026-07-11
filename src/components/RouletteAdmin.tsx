@@ -51,7 +51,9 @@ export default function RouletteAdmin({ slug, nom }: { slug: string; nom: string
       <header className="shrink-0 text-center">
         <p className="text-xs uppercase tracking-[0.3em] text-fete-cyan">{nom}</p>
         <h1 className="text-3xl font-black leading-tight sm:text-4xl">
-          <span className="text-gradient">La Roulette</span>
+          <span className="text-gradient">The n</span>
+          <span className="text-fete-yellow drop-shadow-[0_0_14px_rgba(255,210,63,0.6)]">EX</span>
+          <span className="text-gradient">t Roulette</span>
         </h1>
       </header>
 

@@ -15,7 +15,9 @@ export default function HomePage() {
           🎉 Jeu de soirée entre potes
         </p>
         <h1 className="text-5xl font-black leading-tight sm:text-7xl">
-          <span className="text-gradient">NextRoulette</span>
+          <span className="text-gradient">The n</span>
+          <span className="text-fete-yellow drop-shadow-[0_0_18px_rgba(255,210,63,0.6)]">EX</span>
+          <span className="text-gradient">t Roulette</span>
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-lg text-white/80">
           Chacun ajoute la photo d&apos;un ex via un simple lien. La roulette en
@@ -66,7 +68,7 @@ export default function HomePage() {
 
       {/* PIED DE PAGE -------------------------------------------------------- */}
       <footer className="mt-20 text-center text-sm text-white/50">
-        <p>NextRoulette — prototype festif. À jouer entre potes consentants 💜</p>
+        <p>The nEXt Roulette — prototype festif. À jouer entre potes consentants 💜</p>
       </footer>
     </main>
   );
