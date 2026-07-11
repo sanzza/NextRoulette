@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /$
+# Les parties sont privées (liens-capacités) : on décourage l'indexation.
+Disallow: /r/
+Disallow: /admin/
+Disallow: /api/

@@ -40,3 +40,13 @@ Thumbs.db
 
 # TypeScript
 *.tsbuildinfo
+
+# Données locales (base SQLite + photos) — ne jamais committer
+/data
+*.db
+*.db-shm
+*.db-wal
+
+# Fichiers de test générés
+/scripts/samples
+/scripts/*.png

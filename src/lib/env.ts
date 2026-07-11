@@ -12,6 +12,11 @@ const envSchema = z.object({
 
   NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
 
+  // Persistance : chemin du fichier SQLite (doit être sur un disque persistant).
+  DATABASE_PATH: z.string().default("./data/nextroulette.db"),
+  // Taille maximale d'une photo uploadée, en mégaoctets.
+  MAX_UPLOAD_MB: z.coerce.number().positive().max(25).default(8),
+
   // Le secret JWT doit être suffisamment long pour HS256.
   JWT_SECRET: z
     .string()

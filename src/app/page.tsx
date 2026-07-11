@@ -22,18 +22,18 @@ export default function HomePage() {
           désigne un… et tout le monde doit deviner : <strong>c&apos;est l&apos;ex de qui&nbsp;?</strong>
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <Link
+            href="/creer"
+            className="rounded-full bg-fete-pink px-8 py-3 font-bold text-white shadow-lg transition hover:scale-105"
+          >
+            Créer une partie 🚀
+          </Link>
           <a
             href="#roulette"
-            className="rounded-full bg-fete-purple px-8 py-3 font-bold text-white shadow-lg transition hover:scale-105"
-          >
-            Tester la roulette 🎰
-          </a>
-          <Link
-            href="/admin/login"
             className="rounded-full border border-white/30 px-8 py-3 font-semibold text-white/90 transition hover:bg-white/10"
           >
-            Espace admin
-          </Link>
+            Voir la démo 🎰
+          </a>
         </div>
       </header>
 

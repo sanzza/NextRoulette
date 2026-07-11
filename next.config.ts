@@ -19,6 +19,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Build autonome pour un déploiement Docker/serveur léger (voir docs/DEPLOIEMENT.md).
+  output: "standalone",
+  // better-sqlite3 est un module natif : ne pas le bundler, l'exécuter via Node.
+  serverExternalPackages: ["better-sqlite3"],
   async headers() {
     return [
       {

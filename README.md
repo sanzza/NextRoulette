@@ -18,6 +18,7 @@ visualiser le concept tout de suite.
 | Langage           | **TypeScript** (strict)                | Un seul langage, sûr et maintenable |
 | Style             | **Tailwind CSS v4**                    | UI festive rapide à itérer |
 | Auth              | **JWT** (`jose`) + cookies httpOnly    | Sécurisé, compatible Edge Runtime |
+| Persistance       | **SQLite** (`better-sqlite3`)          | Un seul fichier (photos incluses), zéro service externe |
 | Validation        | **Zod**                                | Validation des entrées centralisée |
 | Mots de passe     | **bcrypt** (`bcryptjs`)                | Hachage standard de l'industrie |
 
@@ -50,13 +51,32 @@ npm run dev
 
 L'application tourne sur **http://localhost:3000**.
 
-| Route             | Description                                   |
-|-------------------|-----------------------------------------------|
-| `/`               | Page d'accueil festive + roulette jouable     |
-| `/admin/login`    | Connexion à l'espace admin                    |
-| `/admin`          | Tableau de bord (protégé)                      |
-| `/api/health`     | Sonde de santé                                |
-| `/api/auth/*`     | Login / logout / me                           |
+| Route                    | Description                                        |
+|--------------------------|----------------------------------------------------|
+| `/`                      | Accueil festif + démo de roulette                  |
+| `/creer`                 | Créer une partie → obtenir les liens               |
+| `/r/{slug}`              | Ajouter ses ex (contribution privée)               |
+| `/r/{slug}/roulette`     | La roulette (réservée à l'hôte)                    |
+| `/admin/login` · `/admin`| Espace d'administration plateforme (JWT)           |
+| `/api/health`            | Sonde de santé                                     |
+| `/api/rooms/*`           | Parties, upload & photos (voir specs)              |
+
+### 🎬 Comment jouer
+
+1. **Créer** une partie sur `/creer` → tu obtiens un **lien de partage** et un
+   **lien secret d'hôte**.
+2. **Partager** le lien de partage avec les potes : chacun ajoute ses ex **en
+   privé** (personne ne voit les photos des autres).
+3. **Ouvrir** ton lien d'hôte → **lance la roulette** : une photo est tirée,
+   tout le monde devine, puis on révèle **l'ex de qui** ! 😱
+
+### 🧪 Tester avec des photos d'exemple
+
+```bash
+npm run samples          # génère des PNG d'exemple (scripts/samples/)
+npm run build && npm start
+BASE_URL=http://localhost:3000 npm run smoke   # 16 vérifications, dont la confidentialité
+```
 
 ---
 
@@ -98,9 +118,11 @@ NextRoulette/
 
 ## 📚 Documentation
 
+- [`docs/SPECIFICATIONS-FONCTIONNELLES.md`](docs/SPECIFICATIONS-FONCTIONNELLES.md) — **specs fonctionnelles complètes** (acteurs, exigences, règles, écrans)
+- [`docs/FONCTIONNEL.md`](docs/FONCTIONNEL.md) — présentation du jeu & parcours (vue produit)
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — choix techniques & structure
-- [`docs/SECURITY.md`](docs/SECURITY.md) — modèle de sécurité (JWT, cookies, headers)
-- [`docs/FONCTIONNEL.md`](docs/FONCTIONNEL.md) — règles du jeu & parcours utilisateur
+- [`docs/SECURITY.md`](docs/SECURITY.md) — modèle de sécurité (JWT, cookies, confidentialité)
+- [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md) — **mettre le site en ligne** (Railway, Docker, VPS)
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — ce qui est fait / ce qui vient
 - [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) — conventions de contribution
 
@@ -108,10 +130,11 @@ NextRoulette/
 
 ## ⚠️ État actuel
 
-Cette version est une **fondation** : l'authentification, la sécurité et la
-maquette de la roulette sont en place, mais la **persistance en base** (parties,
-ex, photos) et le **temps réel multi-joueurs** sont les prochaines étapes
-documentées dans la [roadmap](docs/ROADMAP.md).
+Le jeu est **fonctionnel de bout en bout** : création de partie, contribution
+privée de photos, et roulette qui révèle les ex. La persistance est un simple
+**fichier SQLite** (photos incluses) → déploiement facile avec un disque
+persistant. Le **temps réel multi-écrans** (roulette synchronisée) est la
+prochaine grande étape, dans la [roadmap](docs/ROADMAP.md).
 
 ---
 

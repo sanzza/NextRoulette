@@ -18,19 +18,25 @@
 - [x] Documentation technique + fonctionnelle + sécurité
 - [x] Outillage qualité : ESLint, Prettier, EditorConfig, CI GitHub Actions
 
-## 🔜 Étape 1 — Persistance
+## ✅ Étape 1 — Persistance (livrée)
 
-- [ ] Base de données **PostgreSQL** + **Prisma** (schéma `User`, `Room`, `ExEntry`)
-- [ ] Remplacer `lib/auth/users.ts` (démo) par un repository DB
-- [ ] Migrations & seed
+- [x] Base **SQLite** (`better-sqlite3`), photos stockées en BLOB → un seul fichier
+- [x] Couche d'accès (`lib/db/rooms.ts`, `lib/db/photos.ts`), init paresseuse
+- [x] Build **standalone** + **Dockerfile** + volume persistant (déploiement)
 
-## 🔜 Étape 2 — Le vrai jeu
+## ✅ Étape 2 — Le vrai jeu (livrée)
 
-- [ ] Création de **partie** + génération du **lien partageable**
-- [ ] Rejoindre une partie via le lien (pseudo joueur)
-- [ ] **Upload de photos** (stockage objet + validation/poids/format)
-- [ ] Modération des photos dans l'admin
-- [ ] Brancher la roulette sur les données réelles d'une partie
+- [x] Création de **partie** + génération des **liens** (partage + hôte)
+- [x] Contribution via le lien (pseudo joueur, sans compte)
+- [x] **Upload de photos** avec validation (signature, taille, formats, limite)
+- [x] **Confidentialité** : chacun ne voit que ses photos ; hôte voit tout
+- [x] Roulette branchée sur les **photos réelles** d'une partie
+- [ ] Modération des photos dans l'admin *(à venir)*
+
+## 🔜 Étape 2 bis — Persistance « scale » (si commercialisation)
+
+- [ ] Bascule optionnelle vers **PostgreSQL** + stockage objet (S3/Blob) pour le
+      serverless et le multi-instances
 
 ## 🔜 Étape 3 — Temps réel & multi-joueurs
 

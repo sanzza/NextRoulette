@@ -28,3 +28,14 @@ export const createRoomSchema = z.object({
   nom: z.string().trim().min(1).max(60).default("Soirée NextRoulette"),
 });
 export type CreateRoomInput = z.infer<typeof createRoomSchema>;
+
+/** Métadonnées accompagnant l'upload d'une photo d'ex. */
+export const uploadMetaSchema = z.object({
+  participantName: z
+    .string()
+    .trim()
+    .min(1, "Indique ton prénom / pseudo")
+    .max(40, "40 caractères maximum"),
+  exLabel: z.string().trim().max(60, "60 caractères maximum").optional(),
+});
+export type UploadMetaInput = z.infer<typeof uploadMetaSchema>;

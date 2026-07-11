@@ -1,0 +1,42 @@
+import { NextResponse } from "next/server";
+import { createRoomSchema } from "@/lib/validation";
+import { createRoom } from "@/lib/db/rooms";
+
+export const runtime = "nodejs";
+
+/**
+ * POST /api/rooms
+ * Crée une partie et renvoie les liens (partage + admin).
+ * Body JSON : { nom }
+ */
+export async function POST(request: Request) {
+  let body: unknown = {};
+  try {
+    body = await request.json();
+  } catch {
+    // Corps vide accepté : on utilisera le nom par défaut.
+  }
+
+  const parsed = createRoomSchema.safeParse(body ?? {});
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Données invalides", details: parsed.error.flatten().fieldErrors },
+      { status: 422 },
+    );
+  }
+
+  const room = createRoom(parsed.data.nom);
+  const origin = new URL(request.url).origin;
+
+  return NextResponse.json(
+    {
+      slug: room.slug,
+      name: room.name,
+      // Lien à partager avec tous les potes pour ajouter leurs ex.
+      shareUrl: `${origin}/r/${room.slug}`,
+      // Lien secret de l'hôte : donne accès à la roulette. À ne pas diffuser.
+      adminUrl: `${origin}/api/rooms/${room.slug}/enter-admin?token=${room.admin_token}`,
+    },
+    { status: 201 },
+  );
+}

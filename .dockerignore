@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+data
+*.db
+*.db-shm
+*.db-wal
+scripts/samples
+scripts/*.png
+.env
+.env*.local
+npm-debug.log*
+Dockerfile
+.dockerignore
