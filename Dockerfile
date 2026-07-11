@@ -29,7 +29,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # La base et les photos vivent ici → à monter sur un VOLUME persistant.
 ENV DATABASE_PATH=/app/data/nextroulette.db
 
-RUN addgroup --system --gid 1001 nodejs \
+# su-exec : permet à l'entrypoint (root) de lancer l'app en utilisateur non-root
+# après avoir réparé la propriété du volume de données.
+RUN apk add --no-cache su-exec \
+  && addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nextjs \
   && mkdir -p /app/data && chown -R nextjs:nodejs /app
 
@@ -37,11 +40,15 @@ RUN addgroup --system --gid 1001 nodejs \
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-USER nextjs
 EXPOSE 3000
 ENV PORT=3000 HOSTNAME=0.0.0.0
 # NB : pas d'instruction VOLUME ici (refusée par Railway). Monter un volume
 # persistant sur /app/data via l'hébergeur (Railway Volumes, compose, -v…).
+# L'entrypoint démarre en root pour chown le volume monté (Railway monte les
+# volumes en root:root), puis exécute `node server.js` en utilisateur nextjs.
 
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["node", "server.js"]

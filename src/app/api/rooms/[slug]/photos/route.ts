@@ -93,14 +93,23 @@ export async function POST(
     return NextResponse.json({ error: validated.error }, { status: validated.status });
   }
 
-  const saved = addPhoto({
-    roomId: room.id,
-    participantId,
-    participantName: meta.data.participantName,
-    exLabel: meta.data.exLabel,
-    mime: validated.value.mime,
-    bytes: validated.value.bytes,
-  });
+  let saved;
+  try {
+    saved = addPhoto({
+      roomId: room.id,
+      participantId,
+      participantName: meta.data.participantName,
+      exLabel: meta.data.exLabel,
+      mime: validated.value.mime,
+      bytes: validated.value.bytes,
+    });
+  } catch (err) {
+    console.error("[photos] échec d'enregistrement :", err);
+    return NextResponse.json(
+      { error: "Erreur serveur : impossible d'enregistrer la photo" },
+      { status: 500 },
+    );
+  }
 
   return NextResponse.json(
     {

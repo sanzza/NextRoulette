@@ -25,7 +25,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const room = createRoom(parsed.data.nom);
+  let room;
+  try {
+    room = createRoom(parsed.data.nom);
+  } catch (err) {
+    // Trace explicite pour les logs de l'hébergeur (souvent : volume de données
+    // non inscriptible → SQLITE_CANTOPEN / EACCES).
+    console.error("[rooms] échec de création de partie :", err);
+    return NextResponse.json(
+      { error: "Erreur serveur : impossible d'enregistrer la partie" },
+      { status: 500 },
+    );
+  }
   const origin = new URL(request.url).origin;
 
   return NextResponse.json(
