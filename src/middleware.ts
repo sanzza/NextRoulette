@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { verifyToken } from "@/lib/auth/jwt";
 import { ACCESS_COOKIE } from "@/lib/auth/session";
+import { getPublicOrigin } from "@/lib/http";
 
 /**
  * Middleware de protection des routes.
@@ -14,7 +15,7 @@ import { ACCESS_COOKIE } from "@/lib/auth/session";
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get(ACCESS_COOKIE)?.value;
 
-  const loginUrl = new URL("/admin/login", request.url);
+  const loginUrl = new URL("/admin/login", getPublicOrigin(request));
   loginUrl.searchParams.set("from", request.nextUrl.pathname);
 
   if (!token) {

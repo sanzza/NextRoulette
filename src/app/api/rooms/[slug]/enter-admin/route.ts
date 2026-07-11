@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getRoomBySlug, isAdmin } from "@/lib/db/rooms";
 import { setAdminToken } from "@/lib/rooms/identity";
+import { getPublicOrigin } from "@/lib/http";
 
 export const runtime = "nodejs";
 
@@ -17,11 +18,14 @@ export async function GET(
   const { slug } = await params;
   const token = new URL(request.url).searchParams.get("token") ?? undefined;
 
+  // Origine publique (derrière le proxy, request.url pointe sur l'hôte interne).
+  const origin = getPublicOrigin(request);
+
   const room = getRoomBySlug(slug);
   if (!room || !isAdmin(room, token)) {
-    return NextResponse.redirect(new URL(`/r/${slug}?admin=refused`, request.url));
+    return NextResponse.redirect(`${origin}/r/${slug}?admin=refused`);
   }
 
   await setAdminToken(slug, room.admin_token);
-  return NextResponse.redirect(new URL(`/r/${slug}/roulette`, request.url));
+  return NextResponse.redirect(`${origin}/r/${slug}/roulette`);
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createRoomSchema } from "@/lib/validation";
 import { createRoom } from "@/lib/db/rooms";
+import { getPublicOrigin } from "@/lib/http";
 
 export const runtime = "nodejs";
 
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
-  const origin = new URL(request.url).origin;
+  const origin = getPublicOrigin(request);
 
   return NextResponse.json(
     {
