@@ -4,13 +4,18 @@ import { useCallback, useEffect, useState } from "react";
 import PhotoRoulette, { type RoulettePhoto } from "@/components/PhotoRoulette";
 
 /**
- * Vue hôte de la roulette : récupère TOUTES les photos de la partie
- * (endpoint protégé par le cookie admin) et les passe à la roue.
+ * Vue hôte de la roulette.
+ *
+ * Mise en page « one-page » : tout tient dans la hauteur de l'écran sur
+ * desktop (pas de scroll) — header compact, roue/photo au centre (flex-1),
+ * et en bas les actions + la galerie FLOUTÉE (l'hôte voit que les photos
+ * arrivent sans se spoiler, il peut donc deviner comme tout le monde).
  */
 export default function RouletteAdmin({ slug, nom }: { slug: string; nom: string }) {
   const [photos, setPhotos] = useState<RoulettePhoto[]>([]);
   const [chargement, setChargement] = useState(true);
   const [shareUrl, setShareUrl] = useState("");
+  const [copie, setCopie] = useState(false);
 
   const charger = useCallback(async () => {
     setChargement(true);
@@ -30,40 +35,82 @@ export default function RouletteAdmin({ slug, nom }: { slug: string; nom: string
     setShareUrl(`${window.location.origin}/r/${slug}`);
   }, [charger, slug]);
 
+  function copierLien() {
+    navigator.clipboard
+      .writeText(shareUrl)
+      .then(() => {
+        setCopie(true);
+        window.setTimeout(() => setCopie(false), 2000);
+      })
+      .catch(() => {});
+  }
+
   return (
-    <main className="mx-auto max-w-2xl px-4 py-10">
-      <header className="mb-8 text-center">
-        <p className="text-sm uppercase tracking-widest text-fete-cyan">{nom}</p>
-        <h1 className="mt-1 text-4xl font-black">
+    <main className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col px-4 py-3 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
+      {/* Header compact */}
+      <header className="shrink-0 text-center">
+        <p className="text-xs uppercase tracking-[0.3em] text-fete-cyan">{nom}</p>
+        <h1 className="text-3xl font-black leading-tight sm:text-4xl">
           <span className="text-gradient">La Roulette</span>
         </h1>
-        <p className="mt-2 text-white/70">{photos.length} ex dans la roue</p>
       </header>
 
-      {chargement ? (
-        <p className="text-center text-white/60">Chargement…</p>
-      ) : (
-        <PhotoRoulette photos={photos} />
-      )}
-
-      <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-        <button
-          type="button"
-          onClick={charger}
-          className="rounded-full border border-white/30 px-6 py-2 text-sm font-semibold transition hover:bg-white/10"
-        >
-          🔄 Rafraîchir les photos
-        </button>
-        {shareUrl && (
-          <button
-            type="button"
-            onClick={() => navigator.clipboard.writeText(shareUrl).catch(() => {})}
-            className="rounded-full border border-fete-cyan px-6 py-2 text-sm font-semibold text-fete-cyan transition hover:bg-fete-cyan/10"
-          >
-            📋 Copier le lien de partage
-          </button>
+      {/* Zone centrale : roue OU photo en grand */}
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center py-2">
+        {chargement ? (
+          <p className="text-center text-white/60">Chargement…</p>
+        ) : (
+          <PhotoRoulette photos={photos} />
         )}
       </div>
+
+      {/* Pied : actions + galerie floutée */}
+      <footer className="shrink-0">
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={charger}
+            className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold transition hover:bg-white/10 sm:text-sm"
+          >
+            🔄 Rafraîchir ({photos.length})
+          </button>
+          {shareUrl && (
+            <button
+              type="button"
+              onClick={copierLien}
+              className="rounded-full border border-fete-cyan px-4 py-1.5 text-xs font-semibold text-fete-cyan transition hover:bg-fete-cyan/10 sm:text-sm"
+            >
+              {copie ? "Copié ✓" : "📋 Lien de partage"}
+            </button>
+          )}
+        </div>
+
+        {photos.length > 0 && (
+          <div className="mt-2">
+            <p className="mb-1 text-center text-[11px] text-white/40">
+              Floutées pour que tu puisses jouer aussi 😉
+            </p>
+            <ul className="flex justify-center gap-2 overflow-x-auto pb-1">
+              {photos.map((p) => (
+                <li key={p.id} className="shrink-0">
+                  <div
+                    className="h-11 w-11 overflow-hidden rounded-lg border-2 sm:h-12 sm:w-12"
+                    style={{ borderColor: p.color }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={p.url}
+                      alt="Photo mystère"
+                      className="h-full w-full scale-125 object-cover blur-md"
+                      draggable={false}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </footer>
     </main>
   );
 }

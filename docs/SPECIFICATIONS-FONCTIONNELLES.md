@@ -111,6 +111,11 @@ tirage — c'est ce qui crée la surprise.
 - **EF-24** L'hôte peut **recharger** la liste des photos à tout moment.
 - **EF-25** Si la partie ne contient **aucune** photo, la roue invite à partager le
   lien.
+- **EF-26** La page roulette affiche une **galerie floutée** des photos : l'hôte
+  vérifie que les contributions arrivent **sans voir les visages**, et peut donc
+  jouer/deviner comme les autres. Les photos ne s'affichent nettes qu'au tirage.
+  *(Flou appliqué à l'affichage — adapté au cadre « entre potes », pas un secret
+  cryptographique.)*
 
 ### 5.4 Administration plateforme
 - **EF-30** Un administrateur peut se **connecter** (`/admin/login`) et accéder à un
